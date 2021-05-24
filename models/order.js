@@ -29,9 +29,12 @@ const orderSchema = new Schema({
         endDate: {
             type: Date
         },
-        occurences: {
+        occurence: {
             type: Number
         },
+        occurrenceArray: [
+            Number
+        ]
     }]
 });
 

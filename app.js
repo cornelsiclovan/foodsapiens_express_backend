@@ -3,6 +3,7 @@ const bodyParser=require('body-parser');
 const mongoose=require('mongoose');
 
 const orderRoutes = require('./routes/order-routes');
+const itemRoutes = require('./routes/item-routes');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/orders', orderRoutes);
+app.use('/api/items', itemRoutes);
 
 mongoose.connect(`mongodb://localhost/foodsapiens`)
     .then(() => {

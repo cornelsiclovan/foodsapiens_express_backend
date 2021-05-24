@@ -49,16 +49,7 @@ const createOrder = async (req, res, next) => {
          items,
      } = req.body;
 
-    const createdOrder = new Order({
-        wp_id,
-        name,
-        address1,
-        address2,
-        city,
-        items
-    });     
-
-    let existingOrder;
+     let existingOrder;
 
     try {
         existingOrder = await Order.findOne({ wp_id: wp_id })
@@ -69,6 +60,39 @@ const createOrder = async (req, res, next) => {
     if(existingOrder) {
         return next(new HttpError('This order already exists'))
     }
+
+     items.forEach(element => {
+        element.occurrenceArray = [];
+
+        let i = element.occurence;
+
+        while(i --) {
+            element.occurrenceArray.push(0);
+        }
+
+        element.wp_id = wp_id;
+        element.name = name;
+        element.address1 = address1;
+        element.address2 = address2;
+        element.city = city;
+
+        try {
+            new Fawn.Task().save('items', element).run();
+        } catch(error) { 
+            error = new HttpError(error, 500);
+            return next(error);
+        }
+     });
+
+    const createdOrder = new Order({
+        wp_id,
+        name,
+        address1,
+        address2,
+        city,
+        items
+    });     
+
 
     try {
         new Fawn.Task()
