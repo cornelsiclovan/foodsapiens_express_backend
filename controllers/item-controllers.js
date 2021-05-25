@@ -14,7 +14,20 @@ const getItems = async (req, res, next) => {
         return next(new HttpError("Fetching ordres failed, please try again later", 500));
     }
 
-    console.log(req.query.today);
+    let dateTime = req.query.today.split("T");
+    console.log(dateTime[0]);
+
+    console.log("today ", req.query.today);
+
+    let today = new Date(dateTime[0]);
+    console.log(today);
+    
+    let tomorrow = new Date(86400000 + +today);
+   
+   
+    
+
+    console.log("tomorrow ", tomorrow);
 
     //console.log(orders);
     // serializedOrders = orders.map(order => {

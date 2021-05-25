@@ -34,6 +34,7 @@ const createOrder = async (req, res, next) => {
     const validationErrors = validationResult(req);
 
     if(!validationErrors.isEmpty()){
+        
         return next(new HttpError('Invalid inputs passed, please check your data', 422));
     }
 
@@ -58,7 +59,7 @@ const createOrder = async (req, res, next) => {
     }
 
     if(existingOrder) {
-        return next(new HttpError('This order already exists'))
+        return next(new HttpError('This order already exists', 400))
     }
 
      items.forEach(element => {
@@ -71,7 +72,7 @@ const createOrder = async (req, res, next) => {
         }
 
         element.wp_id = wp_id;
-        element.name = name;
+        element.clientName = name;
         element.address1 = address1;
         element.address2 = address2;
         element.city = city;
