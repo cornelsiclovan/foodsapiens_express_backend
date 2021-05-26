@@ -76,6 +76,7 @@ const createOrder = async (req, res, next) => {
         element.address1 = address1;
         element.address2 = address2;
         element.city = city;
+        
 
         try {
             new Fawn.Task().save('items', element).run();

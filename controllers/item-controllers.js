@@ -8,27 +8,24 @@ const Item = require('../models/item');
 
 const getItems = async (req, res, next) => {
     let items;
-    try {
-        items = await Item.find({});
-    } catch(error) {
-        return next(new HttpError("Fetching ordres failed, please try again later", 500));
-    }
 
-    let dateTime = req.query.today.split("T");
-    console.log(dateTime[0]);
+    let date = (new Date()).getUTCDate();
+    
+    console.log(date);
 
-    console.log("today ", req.query.today);
+   
+    if(req.query.today !== undefined) {
+        dateTime = req.query.today.split("T");
+    } 
+
+    // console.log(dateTime[0]);
+
+    // console.log("today ", req.query.today);
 
     let today = new Date(dateTime[0]);
-    console.log(today);
     
     let tomorrow = new Date(86400000 + +today);
    
-   
-    
-
-    console.log("tomorrow ", tomorrow);
-
     //console.log(orders);
     // serializedOrders = orders.map(order => {
     //     return {
@@ -41,7 +38,30 @@ const getItems = async (req, res, next) => {
     //     }
     // })
 
-    res.json({items: items.map(item=> item.toObject({getters: true}))});
+  
+    try {
+
+        items = await Item.find({});
+    } catch(error) {
+        return next(new HttpError("Fetching ordres failed, please try again later", 500));
+    }
+
+    console.log(items);
+
+    let filteredItems = [];
+
+    items.map(item => {
+        console.log(item.startDate);
+        console.log(tomorrow);
+        if(tomorrow + ""===item.startDate + "") {
+            filteredItems.push(item)
+        }
+        
+    })
+
+   
+
+    res.json({items: filteredItems.map(item=> item.toObject({getters: true}))});
 }
 
 exports.getItems = getItems;
