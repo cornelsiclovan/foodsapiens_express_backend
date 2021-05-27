@@ -8,12 +8,9 @@ const Item = require('../models/item');
 
 const getItems = async (req, res, next) => {
     let items;
-
-    let date = (new Date()).getUTCDate();
-    
-    console.log(date);
-
    
+    console.log(req.query.today);
+
     if(req.query.today !== undefined) {
         dateTime = req.query.today.split("T");
     } 
@@ -51,12 +48,12 @@ const getItems = async (req, res, next) => {
     let filteredItems = [];
 
     items.map(item => {
-        console.log(item.startDate);
-        console.log(tomorrow);
-        if(tomorrow + ""===item.startDate + "") {
+        console.log("startDate", item.startDate);
+        console.log("endDate", item.startDate);
+        console.log("tomorrow", tomorrow);
+        if(tomorrow + ""===item.startDate + "" || tomorrow <= item.endDate) {
             filteredItems.push(item)
         }
-        
     })
 
    
