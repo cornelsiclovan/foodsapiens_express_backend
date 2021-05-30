@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const HttpError = require('../models/http-errors');
 const Fawn = require('fawn');
 const Order = require('../models/order');
+const Item = require('../models/item');
 
 Fawn.init(mongoose);
 
@@ -38,9 +39,6 @@ const createOrder = async (req, res, next) => {
         return next(new HttpError('Invalid inputs passed, please check your data', 422));
     }
 
-    console.log("post");
-    //console.log(req.body);
-
      const {
          wp_id,
          name,
@@ -48,6 +46,8 @@ const createOrder = async (req, res, next) => {
          address2,
          city,
          items,
+         date_created,
+         date_modified
      } = req.body;
 
      let existingOrder;
@@ -58,9 +58,35 @@ const createOrder = async (req, res, next) => {
         return next(new HttpError('Please try again later. Service unavailable', 500));
     }
 
+    let orderUpdateId = null;
+    if(existingOrder) {
+        if(new Date(date_modified) + "" === existingOrder.date_modified + "") {
+        } else {
+            await Order.findOneAndDelete({wp_id: wp_id});
+            orderUpdateId = wp_id;
+           
+            console.log(existingOrder.items.length);
+
+            let nOfItems = existingOrder.items.length;
+
+            while(nOfItems){ 
+                console.log("deleting");
+                await Item.findOneAndDelete({wp_id: wp_id});
+                nOfItems = nOfItems - 1;
+            }
+            existingOrder = false;
+
+        }
+    }
+
     if(existingOrder) {
         return next(new HttpError('This order already exists', 400))
     }
+
+
+
+
+
 
      items.forEach(element => {
         element.occurrenceArray = [];
@@ -76,7 +102,6 @@ const createOrder = async (req, res, next) => {
         element.address1 = address1;
         element.address2 = address2;
         element.city = city;
-        
 
         try {
             new Fawn.Task().save('items', element).run();
@@ -84,6 +109,7 @@ const createOrder = async (req, res, next) => {
             error = new HttpError(error, 500);
             return next(error);
         }
+
      });
 
     const createdOrder = new Order({
@@ -92,7 +118,9 @@ const createOrder = async (req, res, next) => {
         address1,
         address2,
         city,
-        items
+        items,
+        date_created,
+        date_modified
     });     
 
 
@@ -106,7 +134,7 @@ const createOrder = async (req, res, next) => {
     }
     
     res.status(200).json({order: createdOrder});
-    console.log(createdOrder);
+    //console.log(createdOrder);
 }
 
 exports.getOrders = getOrders;

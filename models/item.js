@@ -19,7 +19,7 @@ const itemSchema = new Schema({
         Number
     ],
     wp_id: {
-        type: String
+        type: Number
     },
     name: {
         type: String

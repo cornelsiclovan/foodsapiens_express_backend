@@ -35,7 +35,13 @@ const orderSchema = new Schema({
         occurrenceArray: [
             Number
         ]
-    }]
+    }],
+    date_created: {
+        type: Date
+    },
+    date_modified: {
+        type: Date
+    }
 });
 
 module.exports = mongoose.model('Order', orderSchema);
