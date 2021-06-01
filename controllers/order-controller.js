@@ -86,15 +86,37 @@ const createOrder = async (req, res, next) => {
 
 
 
+    
 
 
      items.forEach(element => {
         element.occurrenceArray = [];
 
-        let i = element.occurence;
+        
+        let dateDiff = (Date.parse(element.endDate) - Date.parse(element.startDate))/ 86400000 + 1
+
+        //let i = element.occurence;
+        let i = dateDiff;
+        let j = 0;
 
         while(i --) {
-            element.occurrenceArray.push(0);
+
+            let dt = new Date(element.startDate.split('T')[0]);
+
+            console.log(new Date(j*86400000 + +dt).getDay());
+
+            if(
+                new Date(j*86400000 + +dt).getDay() === 0 
+                || 
+                new Date(j*86400000 + +dt).getDay() === 6
+               )
+               {
+                element.occurrenceArray.push("w");
+               }
+            else
+              element.occurrenceArray.push(0);
+        
+            j = j+1;
         }
 
         element.wp_id = wp_id;

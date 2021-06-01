@@ -21,7 +21,7 @@ const getItems = async (req, res, next) => {
 
     let today = new Date(dateTime[0]);
     
-    let tomorrow = new Date(86400000 + +today);
+    let tomorrow = new Date(today);
    
     //console.log(orders);
     // serializedOrders = orders.map(order => {
@@ -51,7 +51,7 @@ const getItems = async (req, res, next) => {
         console.log("startDate", item.startDate);
         console.log("endDate", item.startDate);
         console.log("tomorrow", tomorrow);
-        if(tomorrow + ""===item.startDate + "" || tomorrow <= item.endDate) {
+        if(tomorrow  >= item.startDate  && tomorrow  <= item.endDate ) {
             filteredItems.push(item)
         }
     })
