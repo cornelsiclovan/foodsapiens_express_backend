@@ -111,7 +111,7 @@ const createOrder = async (req, res, next) => {
                 new Date(j*86400000 + +dt).getDay() === 6
                )
                {
-                element.occurrenceArray.push("w");
+                element.occurrenceArray.push(2);
                }
             else
               element.occurrenceArray.push(0);
