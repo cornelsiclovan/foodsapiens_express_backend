@@ -61,4 +61,25 @@ const getItems = async (req, res, next) => {
     res.json({items: filteredItems.map(item=> item.toObject({getters: true}))});
 }
 
+const editItem = async (req, res, next) => {
+    const itemId = req.params.id;
+
+    const item = await Item.findById(itemId);
+
+
+
+    console.log(req.body.occurenceArray);
+    
+    let i = 0;
+    let j = 0;
+    
+
+    for(let i = 0; i < item.occurrenceArray.length; i++) {
+        item.occurrenceArray[i] = req.body.occurenceArray[i];
+    }
+
+    res.json(item)
+}
+
 exports.getItems = getItems;
+exports.editItem = editItem;
