@@ -9,7 +9,7 @@ const Item = require('../models/item');
 const getItems = async (req, res, next) => {
     let items;
    
-    console.log(req.query.today);
+    //console.log(req.query.today);
 
     if(req.query.today !== undefined) {
         dateTime = req.query.today.split("T");
@@ -43,14 +43,14 @@ const getItems = async (req, res, next) => {
         return next(new HttpError("Fetching ordres failed, please try again later", 500));
     }
 
-    console.log(items);
+    //console.log(items);
 
     let filteredItems = [];
 
     items.map(item => {
-        console.log("startDate", item.startDate);
-        console.log("endDate", item.startDate);
-        console.log("tomorrow", tomorrow);
+        // console.log("startDate", item.startDate);
+        // console.log("endDate", item.startDate);
+        // console.log("tomorrow", tomorrow);
         if(tomorrow  >= item.startDate  && tomorrow  <= item.endDate ) {
             filteredItems.push(item)
         }
@@ -66,7 +66,7 @@ const editItem = async (req, res, next) => {
 
     const item = await Item.findById(itemId);
 
-
+    console.log("edit");
 
     console.log(req.body.occurenceArray);
     
@@ -76,6 +76,14 @@ const editItem = async (req, res, next) => {
 
     for(let i = 0; i < item.occurrenceArray.length; i++) {
         item.occurrenceArray[i] = req.body.occurenceArray[i];
+    }
+
+    item.markModified("occurrenceArray");
+    try {
+        console.log(item);
+        item.save()
+    } catch(err) {
+        console.log(err);
     }
 
     res.json(item)
